@@ -1,0 +1,28 @@
+fn dev_map_hub()
+Gives you the option to load any map with max items
+
+checkinv(inv: [u32; 64])
+prints all items in the inv array that is being passed around.
+
+item_index(item_number: usize) -> String
+when called with a number, it gives back a string that coralates with the item number
+
+give(inv: &mut [u32;64], item_number: usize, amount: u32)
+when called it gives the amount of the item with the corlating number and prints to chat "You have reciaved NAME HERE"
+
+fn askquest(text: &str) -> String
+
+
+https://stackoverflow.com/questions/26643688/how-do-i-split-a-string-in-rust
+
+
+
+struct Stats {
+    player_x: i32,
+    player_y: i32,
+    player_name: String,
+    player_level: u32,
+    
+    map_x: [i32; 512],
+    map_y: [i32; 512],
+}

@@ -1,0 +1,7 @@
+[package]
+name = "Zurg"
+version = "0.1.0"
+authors = ["Nathan Grimes <nathangrimes500@gmail.com>"]
+
+[dependencies]
+colored = "1.6"
