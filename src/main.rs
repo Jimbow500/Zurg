@@ -15,9 +15,8 @@ use colored::*;
 
 
 fn main(){
-    //println!("Welcome to Zurg");
-    //menu(false);
-    newgame();
+    println!("Welcome to Zurg");
+    menu(false);
 }
 
 struct Stats {
@@ -106,13 +105,6 @@ fn menu(died: bool){
     }; //end of loop
 }
 
-fn clean_input(input: String) -> String{
-    //Change it all to lowercase
-    let output = input.to_ascii_lowercase();
-    // Have it were its only single words
-    return output;
-}
-
 // This will load anymap with all the best items to test
 fn dev_map_hub(){
     println!("Hello there where would you like to go?");
@@ -157,7 +149,7 @@ fn askquest(text: &str, wait: u64) -> String {
     io::stdin()
         .read_line(&mut input)
         .expect("failed to read line");
-    input = clean_input(input);
+    input = input.to_ascii_lowercase();
     return input;
 }
 
@@ -266,7 +258,7 @@ fn render_ent(world: &mut [u8; 262144],x: u32, y: u32) {
 }
 
 fn update_map(mut world: &mut [u8; 262144], stats: &mut Stats) {
-    
+    // Update player
     for x in 0..262144 {
         if world[x] == 1 {
             world[x] = 0;
@@ -296,12 +288,38 @@ fn draw_line(mut world: &mut [u8; 262144], mut firstx: u32, mut firsty: u32, sec
     };
 }
 
+fn player_input(input: String, world: &mut [u8; 262144], stats: &mut Stats, inv: &mut [u32; 64]) {
+    
+    let words: Vec<&str> = input.trim().split(' ').collect();
+
+    // Find Verb
+    for x in words.clone() {
+        if x == "nice" {
+            print!("Cool");
+        } else if x == "kms" {
+            exit(1);
+        } else if x == "move" {
+            // Find number
+            for x in words.clone() {
+                let unit = x.parse::<u32>();
+                
+                match {
+                    Ok(var) => println!("we got a number {}", var),
+                    Err(why) => why
+                }
+            };
+        };
+    };
+    
+    
+}
+
 fn newgame(){
 
     // Inv that will be passed around the game
     let mut inv: [u32; 64] = [0; 64];
     
-    let mut stats = Stats { player_x: 37, player_y: 254, player_name: String::new(), player_level: 0, player_id: 1};
+    let mut stats = Stats { player_x: 37, player_y: 56, player_name: String::new(), player_level: 0, player_id: 1};
     
     let mut world: [u8; 262144] = [0; 262144];
     // Health isn't going to be in the stats because it will always be called
@@ -313,22 +331,19 @@ fn newgame(){
     
     // Borders of the world
     //TODO move these to the world gen
+    draw_line(&mut world, 1, 1, 255, 1, 2);
+    draw_line(&mut world, 1,   1, 1, 255,   2);
     draw_line(&mut world, 1, 255, 255, 255, 2);
-    draw_line(&mut world, 1,   1, 255, 1,   2);
-    draw_line(&mut world, 1,   1,   1, 255, 2);
-    draw_line(&mut world, 255, 1,   1, 255, 2);
+    draw_line(&mut world, 255, 1, 255, 255, 2);
     
     
     loop {
+        input = String::new();
         update_map(&mut world, &mut stats);
         draw_map(&mut stats, &mut world);
-        input = askquest("What would you like to do?: ", 250);
+        input = askquest("-What would you like to do?: ", 250);
         
-        
-        if inv[0] == 0 {
-            println!("{}","You're Dead".red());
-            continue;
-        };
+        player_input(input, &mut world, &mut stats, inv);
     };
     //TODO needs updating --> refresh_check(&mut inv, &mut stats);
     exit(1);
